@@ -6,7 +6,7 @@
 ## Bạn sẽ làm gì (13:30–17:00)
 | M | Giờ | Việc | Lệnh kiểm tra |
 |---|---|---|---|
-| M0 | 13:30 | Overlay starter lên repo Lab 8, cài đặt | `python -m lab9.smoke` |
+| M0 | 13:30 | Overlay starter lên repo Lab 8, cài đặt và sinh eval set | `python -m lab9.smoke` và `python -m lab9.evalset --build` |
 | M1 | 13:45 | Taxonomy ≥5 failure mode từ trace; gắn `failure_modes` cho eval set | `python -m lab9.evalset --check` |
 | M2 | 14:30 | Judge-the-judge: cài `kappa`, P/R, Rogan-Gladen; audit ≥5 bất đồng | `python -m lab9.judge --csv data/eval/judge_tone_public.csv --audit 5` |
 | M3 | 15:15 | Trajectory assertion: `ApprovalBypass`, `RefundAmountCorrect` + 1 metric cho FM-08 | `python -m pytest -q -m student -o addopts= -k lab9` |
@@ -22,6 +22,10 @@ python -m lab9.smoke
 python -m lab9.evalset --build          # sinh eval_set_v1.jsonl + labels_v1.json (nhãn TÁCH khỏi item)
 ```
 
+Ở M0, cả hai lệnh trả exit 0. Các item mới có `failure_modes` rỗng. Sau khi gắn mã lỗi từ taxonomy ở M1, chạy `python -m lab9.evalset --check` và kiểm tra kết quả có 0 lỗi.
+
+Job `eval-gate` cần các bài tập đã hoàn thành và baseline M4. Job chạy test học viên, kiểm tra eval set, rồi dùng cùng metric spec và baseline để chấm `swarm` của PR và xác nhận `fixed` qua gate, `seeded_regression` bị chặn ở `pass_rate`.
+
 ## Công nghệ (kiểm tra 11/2026)
 - **pydantic-evals 2.68** — harness chính: `Dataset` / `Case` / `Evaluator`, chạy offline, không cần OTel (ta không dùng span evaluator).
 - **scipy.stats.bootstrap(paired=True)** — CI cho hiệu hai phiên bản trên cùng item.
@@ -33,6 +37,7 @@ python -m lab9.evalset --build          # sinh eval_set_v1.jsonl + labels_v1.jso
 src/lab9/evalset.py   eval set v1 + provenance + check        (TODO M1: failure_modes)
 src/lab9/graders.py   pydantic-evals Evaluators               (TODO M3: 2 grader)
 src/lab9/stats.py     confusion, P/R, kappa, RG, bootstrap    (TODO M2, M4)
+src/lab9/trace_case.py trace → bước sai đầu tiên cho 1 claim@seed (docs/trace_case.md)
 src/lab9/judge.py     calibrate judge từ CSV (replay)
 src/lab9/eval.py      chạy 1 shape → reports/eval_<shape>.json có run_id
 src/lab9/gate.py      PR vs baseline theo metric_spec → exit 0/1

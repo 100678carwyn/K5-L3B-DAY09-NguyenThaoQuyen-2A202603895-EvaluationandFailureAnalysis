@@ -77,6 +77,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.build:
         n_items, n_labels = build()
         print(f"wrote {ITEMS} ({n_items} items) and {LABELS} ({n_labels} labels)")
+        if not args.check:
+            return 0
     problems = check()
     for p in problems:
         print("FAIL", p)

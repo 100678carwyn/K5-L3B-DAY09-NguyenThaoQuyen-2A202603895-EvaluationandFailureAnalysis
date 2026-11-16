@@ -1,6 +1,6 @@
 # Checkpoints (giảng viên đi bàn đối chiếu)
 
-**M0 — Môi trường.** `python -m lab9.smoke` in `M0 PASS`; `evalset --build` tạo 14 item.
+**M0 — Môi trường.** `python -m lab9.smoke` in `M0 PASS`. `python -m lab9.evalset --build` tạo 14 item cùng tệp nhãn riêng và trả exit 0 khi `failure_modes` còn rỗng.
 
 **M1 — Taxonomy.** `docs/failure_taxonomy.md` có ≥5 FM, mỗi FM: định nghĩa 1 câu, layer (model/prompt · tool/schema · retrieval · orchestration/state · guardrail/approval), ≥1 trace/claim làm bằng chứng, grader dự kiến (code / judge / human). 5 anchor bắt buộc so với `instructor/coding_sheet_anchor_key.csv`. `evalset --check` = 0 problem.
 
@@ -14,4 +14,6 @@ python -m lab9.eval --shape swarm --out reports/baseline_v1.json
 python -m lab9.eval --shape fixed && python -m lab9.gate --pr reports/eval_fixed.json --baseline reports/baseline_v1.json             # exit 0
 python -m lab9.eval --shape seeded_regression && python -m lab9.gate --pr reports/eval_seeded_regression.json --baseline reports/baseline_v1.json  # exit 1
 ```
-Tham chiếu: `pass_rate` Δ −0.271, CI [−0.500, −0.057] ⇒ BLOCK. `paired_bootstrap` lệch ≤0.01 so với tham chiếu. Workflow `eval-gate` xanh trên PR.
+Tham chiếu: `pass_rate` Δ −0.271, CI [−0.500, −0.057] ⇒ BLOCK. `paired_bootstrap` lệch ≤0.01 so với tham chiếu.
+
+Sau khi hoàn thành bài tập và commit baseline M4, workflow `eval-gate` chạy test học viên và kiểm tra eval set. Gate phải trả exit 0 cho `swarm` của PR và `fixed`. Với `seeded_regression`, gate phải trả exit 1 và ghi rõ `pass_rate` trong danh sách metric bị chặn. Cả ba dùng chung metric spec và baseline.

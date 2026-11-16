@@ -13,14 +13,39 @@
 | M4 | 16:00 | Paired bootstrap + CI gate: chặn `seeded_regression`, cho qua `fixed` | `python -m lab9.gate ...` (exit 1 / exit 0) |
 | — | 16:45 | Eval card + PRD v1.1, nộp | xem `SUBMISSION.md` |
 
-## Cài đặt (M0)
+## Cài đặt (M0): chép overlay vào repo Lab 8
+
+Starter này **không chạy độc lập**: nó chỉ có `src/lab9/`, docs và workflow. Code agent, dữ liệu và `requirements.txt` nằm trong repo Lab 8 của nhóm.
+
 ```bash
-git checkout -b starter/d09            # trên repo Lab 8 của nhóm
-cp -R lab9-starter/src/. src/ && cp -R lab9-starter/.github .
-cd src && python -m pip install -r requirements.txt -r requirements-lab9.txt
+# 1. Ở thư mục chứa repo Lab 8 của nhóm (bản đã nộp Day 8)
+git clone https://github.com/VinUni-AI20k/K5-Day9-Evaluation-and-Failure-Analysis lab9-starter
+cd <repo-lab8-cua-nhom>
+git switch -c starter/d09
+
+# 2. Chép đúng 3 thư mục. KHÔNG chép README/CHECKPOINTS/RUBRIC/SUBMISSION/.gitignore ở gốc:
+#    các file đó trùng tên với Lab 8; đọc chúng ngay trong lab9-starter.
+cp -R ../lab9-starter/src/. src/
+cp -R ../lab9-starter/docs/. docs/
+cp -R ../lab9-starter/.github/. .github/     # thêm eval-gate.yml, giữ ci.yml của Lab 8
+
+# 3. Cài và kiểm tra (Python ≥ 3.11; dùng venv hoặc `uv venv && uv pip install ...`)
+cd src
+python -m pip install -r requirements.txt -r requirements-lab9.txt
 python -m lab9.smoke
 python -m lab9.evalset --build          # sinh eval_set_v1.jsonl + labels_v1.json (nhãn TÁCH khỏi item)
+cd .. && git add -A && git commit -m "chore: add lab9 overlay"
 ```
+
+Kiểm tra nhanh sau bước 2: `git status` chỉ hiện file **mới** trong `src/lab9/`, `src/tests/test_lab9_*`, `src/config/`, `src/data/eval/`, `docs/` và `.github/workflows/eval-gate.yml`. Nếu thấy file `src/lab8/` bị sửa, bạn đã chép nhầm: `git restore src/lab8`.
+
+**Baseline cho CI (M4).** Job `eval-gate` đọc `src/reports/baseline_v1.json` trên nhánh, nên file này phải được commit. Sinh từ `main` đã hoàn thành M1–M3 (`-f` để chắc chắn không bị `.gitignore` bỏ qua):
+```bash
+cd src
+python -m lab9.eval --shape swarm --spec config/metric_spec.yaml --out reports/baseline_v1.json
+git add -f reports/baseline_v1.json && git commit -m "chore: add eval baseline v1"
+```
+Workflow chạy khi mở PR (hoặc chạy tay ở tab Actions), không chạy khi push thẳng lên `main`.
 
 Ở M0, cả hai lệnh trả exit 0. Các item mới có `failure_modes` rỗng. Sau khi gắn mã lỗi từ taxonomy ở M1, chạy `python -m lab9.evalset --check` và kiểm tra kết quả có 0 lỗi.
 

@@ -1,0 +1,18 @@
+name: lab9-eval-gate
+on: [pull_request, workflow_dispatch]
+jobs:
+  eval-gate:
+    runs-on: ubuntu-latest
+    env: {PYTHONUTF8: "1"}
+    defaults: {run: {working-directory: src}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13"}
+      - run: python -m pip install -r requirements.txt -r requirements-lab9.txt
+      - run: python -m lab9.smoke
+      - run: python -m pytest -q -m student -o addopts= -k lab9
+      - run: python -m lab9.evalset --check
+      - run: python -m lab9.eval --shape swarm --out reports/eval_pr.json
+      # baseline_v1.json is committed by the team after M4 (re-run on main, never hand-edited)
+      - run: python -m lab9.gate --pr reports/eval_pr.json --baseline reports/baseline_v1.json

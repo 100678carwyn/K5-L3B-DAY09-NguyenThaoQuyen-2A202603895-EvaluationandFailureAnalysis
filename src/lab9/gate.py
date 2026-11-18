@@ -106,15 +106,14 @@ def _ratchet(spec: dict, base_spec: dict, same_set: bool) -> list[str]:
             out.append(f"metric {om['id']} removed")
         else:
             tighter(f"metric {om['id']}", have[om["id"]], om)
-    have_s = {s["name"]: s for s in spec.get("slices") or []}
+    # a slice name may appear more than once (one entry per metric), so key by (name, metric)
+    have_s = {(s["name"], s.get("metric")): s for s in spec.get("slices") or []}
     for os_ in base_spec.get("slices") or []:
-        if os_["name"] not in have_s:
-            out.append(f"slice {os_['name']} removed")
+        key = (os_["name"], os_.get("metric"))
+        if key not in have_s:
+            out.append(f"slice {os_['name']}/{os_.get('metric')} removed")
         else:
-            ns = have_s[os_["name"]]
-            tighter(f"slice {os_['name']}", ns, os_)
-            if ns.get("metric") != os_.get("metric"):
-                out.append(f"slice {os_['name']}: metric {os_.get('metric')} -> {ns.get('metric')}")
+            tighter(f"slice {os_['name']}/{os_.get('metric')}", have_s[key], os_)
     return out
 
 

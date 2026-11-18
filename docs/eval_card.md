@@ -3,7 +3,7 @@
 Card này đi kèm mỗi báo cáo và được dùng lại ở Day 10.
 
 - **Run ID / eval set SHA:** baseline `E-swarm-20261118-ba03`, eval set v1 sha `ba03889993ae`. Với v2: baseline `E-swarm-20261118-472b`, eval set v2 sha `472b70f08380`.
-- **Phiên bản:** code (commit) *(điền hash sau khi commit)* · eval set v1 (sha `ba03889993ae`) · metric_spec 1.0 (v2: 2.0) · grader: `lab9/graders.py` *(điền hash sau khi commit)* · seeds 11/22/33/44/55
+- **Phiên bản:** code (commit) `c2a0732` · eval set v1 (sha `ba03889993ae`) · metric_spec 1.0 (v2: 2.0) · grader: `lab9/graders.py` `efc67da` · seeds 11/22/33/44/55
 - **Eval set:** v1, 14 item × 5 seed, nguồn lab8_public; nhãn: labels_v1.json
 - **Metric & ngưỡng:** (trích `config/metric_spec.yaml`)
 
@@ -40,7 +40,7 @@ Card này đi kèm mỗi báo cáo và được dùng lại ở Day 10.
 
   | Variant | Bị chặn bởi |
   |---|---|
-  | `slice_regression` | chỉ các slice `money_movement` (`pass_rate` 0.85, `refund_amount_correct`); `pass_rate` trung bình 0.936 vẫn trên sàn |
+  | `slice_regression` | slice `money_movement` (`pass_rate` và `refund_amount_correct` đều 0.85 < sàn 0.90) và `proposal_amount_correct` (0.936 < 0.95); `pass_rate` trung bình 0.936 vẫn trên sàn 0.85 và không bị chặn |
   | `flaky_regression` | `pass_hat_5` (0.571), cùng `pass_rate`, `proposal_amount_correct` và slice `money_movement` |
   | `seeded_regression` | nhiều metric và cả ba slice `money_movement`, `adversarial`, `denial` |
   | `fixed`, `honest_refactor` | không bị chặn (merge) |

@@ -61,5 +61,5 @@ Quy tắc: tiền và phê duyệt luôn chấm bằng code. Judge chỉ dùng c
 ## Phê duyệt
 | Vai trò | Tên | Ngày |
 |---|---|---|
-| Product | | |
-| Eval owner (giữ gate) | | |
+| Product | Nguyễn Thảo Quyên | 2026-11-18 |
+| Eval owner (giữ gate) | Nguyễn Thảo Quyên | 2026-11-18 |
